@@ -851,29 +851,32 @@ final class BaseGarminManager: NSObject, GarminManager, Injectable, @unchecked S
                         continue // Skip this invalid glucose entry
                     }
 
-                    // Set direction
-                    watchState.direction = glucose.direction ?? "--"
+                    // Only include direction and delta for the first entry (index 0)
+                    if index == 0 {
+                        // Set direction
+                        watchState.direction = glucose.direction ?? "--"
 
-                    // Calculate delta if we have a next reading
-                    if index < glucoseObjects.count - 1 {
-                        let deltaValue = glucose.glucose - glucoseObjects[index + 1].glucose
-                        // Delta is Int16 (mg/dL), validate reasonable range
-                        if deltaValue >= -100, deltaValue <= 100 {
-                            watchState.delta = deltaValue // Int16 value
+                        // Calculate delta if we have a next reading
+                        if glucoseObjects.count > 1 {
+                            let deltaValue = glucose.glucose - glucoseObjects[1].glucose
+                            // Delta is Int16 (mg/dL), validate reasonable range
+                            if deltaValue >= -100, deltaValue <= 100 {
+                                watchState.delta = deltaValue // Int16 value
+                            } else {
+                                watchState.delta = nil
+                                if self.debugWatchState {
+                                    debug(.watchManager, "⌚️ Delta out of range (\(deltaValue)), excluding from data")
+                                }
+                            }
                         } else {
-                            watchState.delta = nil
+                            // No previous reading available - set delta to 0
+                            watchState.delta = 0
                             if self.debugWatchState {
-                                debug(.watchManager, "⌚️ Delta out of range (\(deltaValue)), excluding from data")
+                                debug(.watchManager, "⌚️ Only 1 glucose reading available, setting delta to 0")
                             }
                         }
-                    } else {
-                        // No previous reading available - set delta to 0 instead of nil
-                        // This ensures delta is always present in the JSON output
-                        watchState.delta = 0
-                        if self.debugWatchState {
-                            debug(.watchManager, "⌚️ Only 1 glucose reading available, setting delta to 0")
-                        }
                     }
+                    // For index 1-23: direction and delta are left as nil (excluded from JSON)
 
                     // Only include extended data for the most recent reading (index 0)
                     if index == 0 {
@@ -1029,7 +1032,7 @@ final class BaseGarminManager: NSObject, GarminManager, Injectable, @unchecked S
             let datafield = currentGarminSettings.datafield
 
             // Create a watchface app using the UUID from the enum
-            // Only register watchface if data is NOT disabled
+            // Only register watchface if data is enabled
             if isWatchfaceDataEnabled {
                 if let watchfaceUUID = watchface.watchfaceUUID,
                    let watchfaceApp = IQApp(uuid: watchfaceUUID, store: UUID(), device: device)
