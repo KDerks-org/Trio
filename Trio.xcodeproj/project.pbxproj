@@ -5478,8 +5478,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/garmin/connectiq-companion-app-sdk-ios";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.7.0;
+				kind = exactVersion;
+				version = 1.7.0;
 			};
 		};
 		B958F1B52BA0711600484851 /* XCRemoteSwiftPackageReference "MKRingProgressView" */ = {
