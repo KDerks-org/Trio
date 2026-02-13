@@ -33624,6 +33624,9 @@
         }
       }
     },
+    "Advanced Settings" : {
+
+    },
     "Advanced Target Adjustments" : {
       "comment" : "Headline ”Advanced Target Adjustments\"",
       "extractionState" : "manual",
@@ -47043,6 +47046,9 @@
           }
         }
       }
+    },
+    "Automatically switches data delivery between watchface and datafield based on activity detection." : {
+
     },
     "Autosens" : {
       "localizations" : {
@@ -211510,6 +211516,9 @@
           }
         }
       }
+    },
+    "Smart Message Switching" : {
+
     },
     "Smart Watch" : {
       "localizations" : {
