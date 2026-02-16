@@ -44,4 +44,4 @@
 [submodule "MedtrumKit"]
 	path = MedtrumKit
 	branch = dev
-	url = https://github.com/loopandlearn/MedtrumKit
+	url = https://github.com/KDerks-org/MedtrumKit
